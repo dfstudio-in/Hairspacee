@@ -3,712 +3,1704 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barbershop Customer Database - Program Loyalitas</title>
+    <title>🏆 Barbershop Ultimate Management System</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome for Icons -->
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <style>
         :root {
-            --primary-color: #1a1a1a;
-            --secondary-color: #d4af37;
-            --accent-color: #8b7355;
-            --bg-light: #faf9f6;
-            --text-dark: #2d2d2d;
+            --primary: #1a1a1a;
+            --secondary: #d4af37;
+            --accent: #8b7355;
+            --success: #10b981;
+            --danger: #ef4444;
         }
         
+        * { font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Playfair Display', serif; }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f5f0 0%, #e8e6e1 100%);
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2d2d 100%);
             min-height: 100vh;
         }
         
-        .font-display {
-            font-family: 'Playfair Display', serif;
-        }
-        
-        .gold-gradient {
+        .gold-text {
             background: linear-gradient(135deg, #d4af37 0%, #f4e5b0 50%, #d4af37 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
-        .card-shadow {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
         }
         
-        .input-field {
-            transition: all 0.3s ease;
-            border: 2px solid #e5e5e5;
-        }
-        
-        .input-field:focus {
-            border-color: #d4af37;
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-            outline: none;
-        }
-        
-        .upload-zone {
-            border: 3px dashed #d4af37;
-            transition: all 0.3s ease;
-            background: linear-gradient(135deg, #fefefe 0%, #f9f9f9 100%);
-        }
-        
-        .upload-zone:hover {
-            border-color: #b8941f;
-            background: linear-gradient(135deg, #fffef5 0%, #fef9e7 100%);
-            transform: translateY(-2px);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
-            color: white;
+        .btn-gold {
+            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+            color: #1a1a1a;
+            font-weight: 700;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
         
-        .btn-primary:hover {
+        .btn-gold:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(26, 26, 26, 0.3);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
         }
         
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
+        .btn-dark {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            color: white;
+            transition: all 0.3s ease;
         }
         
-        .btn-primary:hover::before {
-            left: 100%;
+        .btn-dark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
-        .loyalty-badge {
-            animation: pulse 2s infinite;
+        /* Login Page Styles */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #2a2a2a 0%, #0a0a0a 100%);
+        }
+        
+        .login-card {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Pagination */
+        .page-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .page-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+        }
+        
+        .page-btn.active {
+            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 80mm;
+                padding: 5mm;
+                background: white !important;
+            }
+            .no-print { display: none !important; }
+        }
+        
+        .struk-container {
+            width: 80mm;
+            padding: 8mm;
+            font-family: 'Courier New', monospace;
+            background: white;
+            color: black;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        /* Animations */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
         }
         
-        .progress-bar {
-            background: linear-gradient(90deg, #d4af37 0%, #f4e5b0 50%, #d4af37 100%);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
+        .animate-slide-in { animation: slideIn 0.3s ease-out; }
+        .animate-pulse-gold { animation: pulse 2s infinite; }
+        
+        /* Table Row Hover */
+        .table-row-hover:hover {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%) !important;
         }
         
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        /* Input Focus */
+        .input-focus:focus {
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            outline: none;
         }
         
-        .floating {
-            animation: floating 3s ease-in-out infinite;
+        /* Upload Zone */
+        .upload-zone {
+            border: 3px dashed #d4af37;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
         
-        @keyframes floating {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+        .upload-zone:hover {
+            border-color: #b8941f;
+            background: rgba(212, 175, 55, 0.05);
+            transform: scale(1.02);
         }
         
-        .scissors-icon {
-            animation: cut 2s ease-in-out infinite;
+        /* Sync Indicator */
+        .sync-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
         }
         
-        @keyframes cut {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-15deg); }
-            75% { transform: rotate(15deg); }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-        }
-        
-        .modal-content {
+        /* QR Code Container */
+        .qr-container {
             background: white;
-            margin: 5% auto;
-            padding: 40px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .image-preview {
-            max-width: 300px;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-
-        /* Table Styles */
-        .data-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-        
-        .data-table th {
-            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
-            color: white;
             padding: 16px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .data-table th:first-child {
-            border-top-left-radius: 12px;
-        }
-        
-        .data-table th:last-child {
-            border-top-right-radius: 12px;
-        }
-        
-        .data-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #e5e5e5;
-            background: white;
-        }
-        
-        .data-table tr:hover td {
-            background: #fefefe;
-        }
-
-        .counter-display {
-            font-size: 4rem;
-            font-weight: 900;
-            line-height: 1;
+            border-radius: 12px;
+            display: inline-block;
         }
     </style>
 </head>
-<body class="antialiased">
-    
-    <!-- Hero Section -->
-    <div class="min-h-screen flex items-center justify-center px-4 py-12">
-        <div class="max-w-6xl w-full">
-            
-            <!-- Header Card -->
-            <div class="bg-white rounded-3xl card-shadow p-8 md:p-12 mb-8">
+<body>
+
+<!-- ==================== LOGIN PAGE ==================== -->
+<div id="loginPage" class="login-container">
+    <div class="login-card glass-card rounded-3xl p-10 w-full max-w-md mx-4 shadow-2xl">
+        
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-gray-900 to-gray-700 rounded-full mb-4 shadow-xl">
+                <i class="fas fa-cut text-4xl text-yellow-400" style="animation: cut 2s ease-in-out infinite;"></i>
+            </div>
+            <h1 class="font-display text-4xl font-black text-gray-900">BARBERSHOP</h1>
+            <p class="text-sm text-gray-600 mt-1">Admin Management System</p>
+            <div class="flex items-center justify-center mt-3 gap-2">
+                <span class="w-10 h-0.5 bg-yellow-500"></span>
+                <i class="fas fa-shield-alt text-yellow-500"></i>
+                <span class="w-10 h-0.5 bg-yellow-500"></span>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">
+                        <i class="fas fa-user mr-2 text-yellow-500"></i>Username
+                    </label>
+                    <input type="text" id="loginUsername" required
+                           class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl"
+                           placeholder="Masukkan username">
+                </div>
                 
-                <!-- Logo & Branding -->
-                <div class="text-center mb-10">
-                    <div class="inline-flex items-center justify-center w-28 h-28 bg-gradient-to-br from-gray-900 to-gray-700 rounded-full mb-6 shadow-xl floating">
-                        <i class="fas fa-cut text-5xl text-yellow-400 scissors-icon"></i>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">
+                        <i class="fas fa-lock mr-2 text-yellow-500"></i>Password
+                    </label>
+                    <input type="password" id="loginPassword" required
+                           class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl"
+                           placeholder="Masukkan password">
+                </div>
+
+                <!-- Default Credentials Info -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700">
+                    <p><strong>Default Login:</strong></p>
+                    <p>Username: <code>admin</code> | Password: <code>barber123</code></p>
+                    <p class="mt-1 text-blue-500">* Bisa diganti di Settings</p>
+                </div>
+
+                <button type="submit" class="btn-dark w-full py-4 rounded-xl text-lg uppercase tracking-wider">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login ke Dashboard
+                </button>
+            </div>
+        </form>
+
+        <p class="text-center text-xs text-gray-500 mt-6">
+            <i class="fas fa-lock mr-1"></i>Terproteksi • Hanya Owner yang bisa akses
+        </p>
+    </div>
+</div>
+
+
+<!-- ==================== MAIN DASHBOARD ==================== -->
+<div id="dashboardPage" class="hidden">
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-black/90 backdrop-blur-md border-b border-yellow-500/30 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-cut text-xl text-black font-bold"></i>
                     </div>
-                    <h1 class="font-display text-5xl md:text-6xl font-black mb-3" style="color: var(--primary-color);">
-                        BARBERSHOP
-                    </h1>
-                    <p class="text-xl md:text-2xl font-light text-gray-600">Premium Grooming Experience</p>
-                    <div class="flex items-center justify-center mt-4 gap-2">
-                        <span class="w-12 h-0.5 bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></span>
-                        <i class="fas fa-star text-yellow-500"></i>
-                        <span class="w-12 h-0.5 bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></span>
+                    <div>
+                        <h1 class="font-display text-2xl font-black text-white">BARBERSHOP</h1>
+                        <p class="text-xs text-yellow-400">Ultimate Management v2.0</p>
                     </div>
                 </div>
 
-                <!-- Loyalty Program Banner -->
-                <div class="loyalty-badge bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 mb-10 text-center relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-400 rounded-full filter blur-3xl opacity-10"></div>
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-center gap-3 mb-4">
-                            <i class="fas fa-crown text-3xl text-yellow-400"></i>
-                            <h2 class="font-display text-3xl md:text-4xl font-bold text-white">PROGRAM LOYALITAS</h2>
-                            <i class="fas fa-crown text-3xl text-yellow-400"></i>
-                        </div>
-                        <p class="text-2xl md:text-3xl font-bold text-yellow-400 mb-2">CUKUR 5X GRATIS 1X</p>
-                        <p class="text-gray-300 text-lg">Kumpulkan stempel setiap kunjungan dan dapatkan potongan gratis!</p>
+                <!-- Nav Actions -->
+                <div class="flex items-center gap-3">
+                    
+                    <!-- Google Sheets Sync Status -->
+                    <div id="syncStatus" class="hidden md:flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-lg border border-green-500/30">
+                        <div class="sync-dot bg-green-500"></div>
+                        <span class="text-green-400 text-sm font-semibold"><i class="fab fa-google mr-1"></i>Synced</span>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="hidden lg:flex items-center gap-4 text-white text-sm">
+                        <span><i class="fas fa-users text-yellow-400 mr-1"></i><strong id="navTotalCust">0</strong> Customer</span>
+                        <span><i class="fas fa-cut text-yellow-400 mr-1"></i><strong id="navTotalVisits">0</strong> Visits</span>
+                    </div>
+
+                    <!-- User Menu -->
+                    <div class="relative">
+                        <button onclick="toggleUserMenu()" class="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 px-4 py-2 rounded-lg font-bold text-black transition">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="currentUserDisplay">Admin</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
                         
-                        <!-- Progress Visualization -->
-                        <div class="mt-8 flex items-center justify-center gap-3">
-                            <div class="w-14 h-14 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg">
-                                <i class="fas fa-check text-2xl text-gray-900 font-bold"></i>
+                        <!-- Dropdown Menu -->
+                        <div id="userMenuDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-200 animate-slide-in z-50">
+                            <div class="p-3 border-b border-gray-100">
+                                <p class="font-bold text-gray-800"><i class="fas fa-crown text-yellow-500 mr-2"></i>Administrator</p>
+                                <p class="text-xs text-gray-500">Full Access</p>
                             </div>
-                            <div class="w-14 h-14 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg">
-                                <i class="fas fa-check text-2xl text-gray-900 font-bold"></i>
-                            </div>
-                            <div class="w-14 h-14 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg">
-                                <i class="fas fa-check text-2xl text-gray-900 font-bold"></i>
-                            </div>
-                            <div class="w-14 h-14 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg">
-                                <i class="fas fa-check text-2xl text-gray-900 font-bold"></i>
-                            </div>
-                            <div class="w-14 h-14 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg">
-                                <i class="fas fa-check text-2xl text-gray-900 font-bold"></i>
-                            </div>
-                            <div class="w-16 h-16 rounded-full bg-red-500 flex items-center justify-center shadow-lg border-4 border-white">
-                                <i class="fas fa-gift text-2xl text-white"></i>
+                            <div class="p-2">
+                                <button onclick="openSettingsModal()" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-lg text-sm">
+                                    <i class="fas fa-cog mr-2 text-gray-500"></i>Pengaturan
+                                </button>
+                                <button onclick="handleLogout()" class="w-full text-left px-4 py-2 hover:bg-red-50 rounded-lg text-sm text-red-600">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </nav>
 
-                <!-- Form Section -->
-                <div id="formSection">
-                    <h3 class="font-display text-3xl font-bold text-center mb-8" style="color: var(--primary-color);">
-                        <i class="fas fa-user-plus mr-3 text-yellow-500"></i>
-                        Registrasi Customer Baru
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+
+        <!-- ========== HERO SECTION ========== -->
+        <section class="glass-card rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+            
+            <!-- Background Decoration -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-yellow-400 rounded-full filter blur-[120px] opacity-10"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-yellow-500 rounded-full filter blur-[100px] opacity-10"></div>
+            
+            <div class="relative z-10">
+                <!-- Logo -->
+                <div class="inline-flex items-center justify-center w-28 h-28 bg-gradient-to-br from-gray-900 to-gray-700 rounded-full mb-6 shadow-2xl" style="animation: float 6s ease-in-out infinite;">
+                    <i class="fas fa-cut text-5xl text-yellow-400" style="animation: cut 2s ease-in-out infinite;"></i>
+                </div>
+                
+                <h1 class="font-display text-5xl md:text-6xl font-black text-gray-900 mb-3">
+                    BARBERSHOP <span class="gold-text">PREMIUM</span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-8">Sistem Manajemen Customer Ultimate Edition</p>
+                
+                <!-- Loyalty Program Banner -->
+                <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 inline-block">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i class="fas fa-crown text-3xl text-yellow-400"></i>
+                        <h2 class="font-display text-2xl md:text-3xl font-bold text-white">PROGRAM LOYALITAS</h2>
+                        <i class="fas fa-crown text-3xl text-yellow-400"></i>
+                    </div>
+                    <p class="text-3xl font-black text-yellow-400 mb-3">CUKUR 5x GRATIS 1x 🎁</p>
+                    
+                    <!-- Progress Dots -->
+                    <div class="flex items-center justify-center gap-2 mt-6">
+                        <div class="w-12 h-12 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg font-bold text-gray-900">1</div>
+                        <div class="w-12 h-12 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg font-bold text-gray-900">2</div>
+                        <div class="w-12 h-12 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg font-bold text-gray-900">3</div>
+                        <div class="w-12 h-12 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg font-bold text-gray-900">4</div>
+                        <div class="w-12 h-12 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg font-bold text-gray-900">5</div>
+                        <i class="fas fa-arrow-right text-2xl text-yellow-400 mx-2"></i>
+                        <div class="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center shadow-lg border-4 border-white animate-pulse">
+                            <i class="fas fa-gift text-xl text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========== STATISTICS CARDS ========== -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Total Customers -->
+            <div class="glass-card rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-users text-2xl text-blue-600"></i>
+                    </div>
+                    <span class="text-xs font-bold text-green-500 bg-green-100 px-2 py-1 rounded-full">LIVE</span>
+                </div>
+                <p class="text-4xl font-black text-gray-900" id="statTotalCustomers">0</p>
+                <p class="text-sm text-gray-600 mt-1">Total Customer Terdaftar</p>
+            </div>
+
+            <!-- Total Visits -->
+            <div class="glass-card rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-cut text-2xl text-purple-600"></i>
+                    </div>
+                    <span class="text-xs font-bold text-green-500 bg-green-100 px-2 py-1 rounded-full">LIVE</span>
+                </div>
+                <p class="text-4xl font-black text-gray-900" id="statTotalVisits">0</p>
+                <p class="text-sm text-gray-600 mt-1">Total Kunjungan</p>
+            </div>
+
+            <!-- Free Haircuts Given -->
+            <div class="glass-card rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-gift text-2xl text-red-600"></i>
+                    </div>
+                    <span class="text-xs font-bold text-red-500 bg-red-100 px-2 py-1 rounded-full animate-pulse">HOT</span>
+                </div>
+                <p class="text-4xl font-black text-gray-900" id="statFreeHaircuts">0</p>
+                <p class="text-sm text-gray-600 mt-1">Gratisan Diberikan</p>
+            </div>
+
+            <!-- Pending Rewards -->
+            <div class="glass-card rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-clock text-2xl text-yellow-600"></i>
+                    </div>
+                    <span class="text-xs font-bold text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">INFO</span>
+                </div>
+                <p class="text-4xl font-black text-gray-900" id="statPendingRewards">0</p>
+                <p class="text-sm text-gray-600 mt-1">Mendekat Gratis</p>
+            </div>
+        </section>
+
+
+        <!-- ========== MAIN CONTENT GRID ========== -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- LEFT COLUMN: FORM INPUT -->
+            <div class="lg:col-span-1">
+                <div class="glass-card rounded-3xl p-8 sticky top-24">
+                    <h3 class="font-display text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                        <i class="fas fa-user-plus text-yellow-500 mr-3"></i>
+                        Registrasi Baru
                     </h3>
 
-                    <form id="customerForm" class="space-y-6">
+                    <form id="customerForm" onsubmit="handleSubmitCustomer(event)" class="space-y-5">
                         
-                        <!-- Nama Lengkap -->
+                        <!-- Nama -->
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-user mr-2 text-yellow-500"></i>Nama Lengkap
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                <i class="fas fa-user text-yellow-500 mr-1"></i>Nama Lengkap
                             </label>
-                            <input type="text" id="nama" name="nama" required
-                                class="input-field w-full px-5 py-4 rounded-xl text-lg"
-                                placeholder="Masukkan nama lengkap anda...">
+                            <input type="text" id="inputNama" required
+                                   class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl"
+                                   placeholder="Nama customer...">
                         </div>
 
-                        <!-- No HP / WhatsApp -->
+                        <!-- No HP -->
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fab fa-whatsapp mr-2 text-green-500"></i>No. HP / WhatsApp
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                <i class="fab fa-whatsapp text-green-500 mr-1"></i>No. WhatsApp
                             </label>
-                            <input type="tel" id="nohp" name="nohp" required
-                                class="input-field w-full px-5 py-4 rounded-xl text-lg"
-                                placeholder="Contoh: 08123456789">
+                            <input type="tel" id="inputNoHP" required
+                                   class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl"
+                                   placeholder="08xxxxxxxxxx">
                         </div>
 
-                        <!-- Upload Foto Rambut -->
+                        <!-- Upload Foto -->
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-camera mr-2 text-blue-500"></i>Foto Rambut Setelah Cukur
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                <i class="fas fa-camera text-blue-500 mr-1"></i>Foto Rambut
                             </label>
-                            <div class="upload-zone rounded-2xl p-8 text-center cursor-pointer" onclick="document.getElementById('foto').click()">
-                                <input type="file" id="foto" name="foto" accept="image/*" class="hidden" onchange="previewImage(event)">
+                            <div class="upload-zone rounded-xl p-6 text-center" onclick="document.getElementById('inputFoto').click()">
+                                <input type="file" id="inputFoto" accept="image/*" class="hidden" onchange="previewUploadImage(event)">
+                                
                                 <div id="uploadPlaceholder">
-                                    <i class="fas fa-cloud-upload-alt text-6xl text-yellow-500 mb-4"></i>
-                                    <p class="text-xl font-semibold text-gray-700 mb-2">Klik atau Drag Foto ke Sini</p>
-                                    <p class="text-sm text-gray-500">Format: JPG, PNG, WEBP (Maks. 10MB)</p>
+                                    <i class="fas fa-cloud-upload-alt text-4xl text-yellow-500 mb-2"></i>
+                                    <p class="text-sm font-semibold text-gray-700">Klik upload foto</p>
+                                    <p class="text-xs text-gray-500">JPG/PNG max 5MB</p>
                                 </div>
-                                <div id="imagePreviewContainer" class="hidden">
-                                    <img id="imagePreview" class="image-preview mx-auto mb-4">
-                                    <p class="text-green-600 font-semibold"><i class="fas fa-check-circle mr-2"></i>Foto berhasil diunggah!</p>
-                                    <button type="button" onclick="removeImage()" class="mt-3 text-red-500 hover:text-red-700 text-sm font-semibold">
-                                        <i class="fas fa-trash mr-1"></i>Hapus Foto
+                                
+                                <div id="uploadPreviewContainer" class="hidden">
+                                    <img id="uploadPreviewImg" class="max-h-40 mx-auto rounded-lg shadow-md mb-2">
+                                    <button type="button" onclick="clearUploadImage()" class="text-red-500 text-sm font-semibold hover:text-red-700">
+                                        <i class="fas fa-trash mr-1"></i>Hapus
                                     </button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Submit Button -->
-                        <button type="submit" class="btn-primary w-full py-5 rounded-xl text-xl font-bold uppercase tracking-wider">
-                            <i class="fas fa-save mr-3"></i>Simpan Data Customer
+                        <button type="submit" class="btn-gold w-full py-4 rounded-xl text-lg uppercase tracking-wider">
+                            <i class="fas fa-save mr-2"></i>Simpan Data
                         </button>
                     </form>
-                </div>
-            </div>
 
-            <!-- Statistics Dashboard -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                
-                <!-- Total Customers -->
-                <div class="bg-white rounded-2xl card-shadow p-8 text-center hover:scale-105 transition-transform">
-                    <div class="counter-display gold-gradient" id="totalCustomers">0</div>
-                    <p class="text-gray-600 font-semibold text-lg mt-2">Total Customer Terdaftar</p>
-                    <i class="fas fa-users text-4xl text-yellow-500 mt-3 opacity-30"></i>
-                </div>
-
-                <!-- Total Visits -->
-                <div class="bg-white rounded-2xl card-shadow p-8 text-center hover:scale-105 transition-transform">
-                    <div class="counter-display gold-gradient" id="totalVisits">0</div>
-                    <p class="text-gray-600 font-semibold text-lg mt-2">Total Kunjungan</p>
-                    <i class="fas fa-cut text-4xl text-yellow-500 mt-3 opacity-30"></i>
-                </div>
-
-                <!-- Free Haircuts Given -->
-                <div class="bg-white rounded-2xl card-shadow p-8 text-center hover:scale-105 transition-transform">
-                    <div class="counter-display gold-gradient" id="freeHaircuts">0</div>
-                    <p class="text-gray-600 font-semibold text-lg mt-2">Gratisan Diberikan</p>
-                    <i class="fas fa-gift text-4xl text-yellow-500 mt-3 opacity-30"></i>
-                </div>
-            </div>
-
-            <!-- Customer Data Table -->
-            <div class="bg-white rounded-3xl card-shadow p-8">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="font-display text-3xl font-bold" style="color: var(--primary-color);">
-                        <i class="fas fa-database mr-3 text-yellow-500"></i>Database Customer
-                    </h3>
-                    <div class="flex gap-3">
-                        <button onclick="exportData()" class="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold">
-                            <i class="fas fa-file-excel mr-2"></i>Export Excel
-                        </button>
-                        <button onclick="clearAllData()" class="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-semibold">
-                            <i class="fas fa-trash mr-2"></i>Hapus Semua
-                        </button>
+                    <!-- Quick Actions -->
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <p class="text-xs font-bold text-gray-500 mb-3">QUICK ACTIONS:</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="exportToCSV()" class="bg-green-50 hover:bg-green-100 text-green-700 py-2 rounded-lg text-sm font-semibold transition">
+                                <i class="fas fa-file-excel mr-1"></i>Export CSV
+                            </button>
+                            <button onclick="printAllData()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 py-2 rounded-lg text-sm font-semibold transition">
+                                <i class="fas fa-print mr-1"></i>Print All
+                            </button>
+                            <button onclick="syncToGoogleSheets()" class="bg-red-50 hover:bg-red-100 text-red-700 py-2 rounded-lg text-sm font-semibold transition">
+                                <i class="fab fa-google mr-1"></i>Sync G-Sheet
+                            </button>
+                            <button onclick="confirmClearAll()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg text-sm font-semibold transition">
+                                <i class="fas fa-trash mr-1"></i>Hapus Semua
+                            </button>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="overflow-x-auto rounded-xl border border-gray-200">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama</th>
-                                <th>No. HP</th>
-                                <th>Kunjungan</th>
-                                <th>Status</th>
-                                <th>Foto</th>
-                                <th>Aksi</t>
-                            </tr>
-                        </thead>
-                        <tbody id="customerTableBody">
-                            <!-- Data will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div id="emptyState" class="text-center py-16 hidden">
-                    <i class="fas fa-inbox text-8xl text-gray-300 mb-4"></i>
-                    <p class="text-2xl text-gray-400 font-semibold">Belum ada data customer</p>
-                    <p class="text-gray-400 mt-2">Mulai tambahkan customer melalui form di atas</p>
-                </div>
             </div>
 
-            <!-- Footer -->
-            <div class="text-center mt-8 pb-8">
-                <p class="text-gray-500 text-sm">
-                    © 2024 Barbershop Customer Management System | 
-                    <i class="fas fa-heart text-red-500 mx-1"></i> Made with passion
-                </p>
+
+            <!-- RIGHT COLUMN: DATA TABLE -->
+            <div class="lg:col-span-2">
+                <div class="glass-card rounded-3xl p-8">
+                    
+                    <!-- Table Header -->
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+                        <h3 class="font-display text-2xl font-bold text-gray-900 flex items-center">
+                            <i class="fas fa-database text-yellow-500 mr-3"></i>
+                            Database Customer
+                            <span class="ml-3 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-bold" id="tableCountBadge">0 data</span>
+                        </h3>
+
+                        <!-- Search & Filter -->
+                        <div class="flex gap-3 w-full md:w-auto">
+                            <div class="relative flex-1 md:w-64">
+                                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" id="searchInput" onkeyup="handleSearch()"
+                                       class="input-focus w-full pl-10 pr-4 py-2 border-2 border-gray-200 rounded-lg text-sm"
+                                       placeholder="Cari nama/no HP...">
+                            </div>
+                            <select id="filterStatus" onchange="handleSearch()"
+                                    class="input-focus px-3 py-2 border-2 border-gray-200 rounded-lg text-sm font-semibold">
+                                <option value="all">Semua</option>
+                                <option value="active">Aktif</option>
+                                <option value="free">Berhak Gratis</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Table Container -->
+                    <div class="overflow-x-auto rounded-xl border border-gray-200">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="bg-gradient-to-r from-gray-900 to-gray-800 text-white">
+                                    <th class="px-4 py-3 text-left font-bold rounded-tl-xl">#</th>
+                                    <th class="px-4 py-3 text-left font-bold">Customer</th>
+                                    <th class="px-4 py-3 text-left font-bold hidden md:table-cell">WhatsApp</th>
+                                    <th class="px-4 py-3 text-center font-bold">Kunjungan</th>
+                                    <th class="px-4 py-3 text-center font-bold">Status</th>
+                                    <th class="px-4 py-3 text-center font-bold rounded-tr-xl">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customerTableBody">
+                                <!-- Dynamic rows here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="hidden text-center py-16">
+                        <i class="fas fa-inbox text-8xl text-gray-300 mb-4"></i>
+                        <p class="text-2xl font-bold text-gray-400">Belum Ada Data</p>
+                        <p class="text-gray-500 mt-2">Mulai tambahkan customer melalui form di kiri</p>
+                    </div>
+
+                    <!-- PAGINATION -->
+                    <div id="paginationContainer" class="mt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                        
+                        <!-- Page Info -->
+                        <div class="text-sm text-gray-600">
+                            Menampilkan <span id="showingFrom" class="font-bold">0</span>-<span id="showingTo" class="font-bold">0</span> dari <span id="totalItems" class="font-bold">0</span> data
+                        </div>
+
+                        <!-- Page Buttons -->
+                        <div class="flex items-center gap-2">
+                            <button onclick="goToPage('first')" class="page-btn px-3 py-2 border-2 border-gray-200 rounded-lg hover:border-yellow-500 disabled:opacity-30" id="btnFirst">
+                                <i class="fas fa-angle-double-left"></i>
+                            </button>
+                            <button onclick="goToPage('prev')" class="page-btn px-3 py-2 border-2 border-gray-200 rounded-lg hover:border-yellow-500 disabled:opacity-30" id="btnPrev">
+                                <i class="fas fa-angle-left"></i>
+                            </button>
+                            
+                            <div id="pageNumbers" class="flex gap-1">
+                                <!-- Dynamic page numbers -->
+                            </div>
+                            
+                            <button onclick="goToPage('next')" class="page-btn px-3 py-2 border-2 border-gray-200 rounded-lg hover:border-yellow-500 disabled:opacity-30" id="btnNext">
+                                <i class="fas fa-angle-right"></i>
+                            </button>
+                            <button onclick="goToPage('last')" class="page-btn px-3 py-2 border-2 border-gray-200 rounded-lg hover:border-yellow-500 disabled:opacity-30" id="btnLast">
+                                <i class="fas fa-angle-double-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Per Page Selector -->
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-gray-600">Tampilkan:</span>
+                            <select id="perPageSelect" onchange="changePerPage()" class="input-focus px-3 py-2 border-2 border-gray-200 rounded-lg text-sm font-semibold">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Success Modal -->
-    <div id="successModal" class="modal">
-        <div class="modal-content">
-            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-check-circle text-6xl text-green-500"></i>
-            </div>
-            <h3 class="font-display text-3xl font-bold text-gray-800 mb-3">Berhasil Disimpan!</h3>
-            <p class="text-gray-600 text-lg mb-6">Data customer telah berhasil ditambahkan ke database.</p>
-            <button onclick="closeModal()" class="btn-primary px-10 py-3 rounded-xl font-bold text-lg">
-                <i class="fas fa-thumbs-up mr-2"></i>Oke, Mengerti!
+    </main>
+</div>
+
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- Success Modal -->
+<div id="successModal" class="fixed inset-0 z-[100] hidden modal-overlay flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center animate-slide-in shadow-2xl">
+        <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-check-circle text-6xl text-green-500"></i>
+        </div>
+        <h3 class="font-display text-3xl font-bold text-gray-900 mb-3">Sukses! 🎉</h3>
+        <p class="text-gray-600 text-lg mb-2" id="successMessage">Data berhasil disimpan!</p>
+        <p class="text-sm text-gray-500 mb-6" id="successSubmessage"></p>
+        <div class="flex gap-3 justify-center">
+            <button onclick="closeModal('successModal')" class="btn-dark px-8 py-3 rounded-xl font-bold">
+                Oke!
+            </button>
+            <button onclick="printLastStruk()" id="btnPrintStruk" class="btn-gold px-8 py-3 rounded-xl font-bold hidden">
+                <i class="fas fa-print mr-2"></i>Cetak Struk
             </button>
         </div>
     </div>
+</div>
 
-    <script>
-        // Initialize data from localStorage
-        let customers = JSON.parse(localStorage.getItem('barbershop_customers')) || [];
+<!-- QR Code Modal -->
+<div id="qrModal" class="fixed inset-0 z-[100] hidden modal-overlay flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center animate-slide-in shadow-2xl">
+        <h3 class="font-display text-2xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-qrcode text-yellow-500 mr-2"></i>QR Code Customer
+        </h3>
+        <p class="text-gray-600 mb-6" id="qrCustomerName">Nama Customer</p>
         
-        // Update statistics on page load
-        updateStatistics();
-        renderTable();
+        <div id="qrCodeContainer" class="qr-container mx-auto mb-6">
+            <!-- QR Code will be generated here -->
+        </div>
+        
+        <p class="text-xs text-gray-500 mb-6">Scan QR code ini untuk melihat data customer secara cepat</p>
+        
+        <div class="flex gap-3 justify-center">
+            <button onclick="downloadQRCode()" class="btn-gold px-6 py-3 rounded-xl font-bold">
+                <i class="fas fa-download mr-2"></i>Download QR
+            </button>
+            <button onclick="closeModal('qrModal')" class="btn-dark px-6 py-3 rounded-xl font-bold">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
 
-        // Form submission
-        document.getElementById('customerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const nama = document.getElementById('nama').value.trim();
-            const nohp = document.getElementById('nohp').value.trim();
-            const fotoInput = document.getElementById('foto');
-            
-            // Create customer object
-            const customer = {
-                id: Date.now(),
-                nama: nama,
-                nohp: nohp,
-                visits: 1,
-                foto: null,
-                tanggalDaftar: new Date().toLocaleDateString('id-ID'),
-                terakhirUpdate: new Date().toISOString()
-            };
-            
-            // Handle image upload (convert to base64)
-            if (fotoInput.files && fotoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    customer.foto = e.target.result;
-                    saveCustomer(customer);
-                };
-                reader.readAsDataURL(fotoInput.files[0]);
-            } else {
-                saveCustomer(customer);
-            }
-        });
+<!-- Struk Preview Modal -->
+<div id="strukModal" class="fixed inset-0 z-[100] hidden modal-overlay flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl p-8 max-w-lg w-full animate-slide-in shadow-2xl my-8">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-display text-2xl font-bold text-gray-900">
+                <i class="fas fa-receipt text-yellow-500 mr-2"></i>Bukti Kunjungan
+            </h3>
+            <button onclick="closeModal('strukModal')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div id="printArea" class="struk-container mx-auto shadow-2xl rounded-lg">
+            <!-- Struk content will be generated here -->
+        </div>
+        
+        <div class="mt-6 flex gap-3 justify-center no-print">
+            <button onclick="executePrint()" class="btn-gold px-8 py-3 rounded-xl font-bold">
+                <i class="fas fa-print mr-2"></i>Cetak Struk
+            </button>
+            <button onclick="closeModal('strukModal')" class="btn-dark px-8 py-3 rounded-xl font-bold">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
 
-        function saveCustomer(customer) {
-            // Check if customer already exists by phone number
-            const existingIndex = customers.findIndex(c => c.nohp === customer.nohp);
-            
-            if (existingIndex !== -1) {
-                // Update existing customer
-                customers[existingIndex].visits += 1;
-                customers[existingIndex].terakhirUpdate = new Date().toISOString();
-                if (customer.foto) {
-                    customers[existingIndex].foto = customer.foto;
-                }
+<!-- Settings Modal -->
+<div id="settingsModal" class="fixed inset-0 z-[100] hidden modal-overlay flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-8 max-w-lg w-full animate-slide-in shadow-2xl max-h-[90vh] overflow-y-auto">
+        <h3 class="font-display text-2xl font-bold text-gray-900 mb-6">
+            <i class="fas fa-cog text-yellow-500 mr-2"></i>Pengaturan
+        </h3>
+        
+        <div class="space-y-6">
+            <!-- Google Sheets Integration -->
+            <div class="border-b border-gray-200 pb-6">
+                <h4 class="font-bold text-lg text-gray-800 mb-3">
+                    <i class="fab fa-google text-red-500 mr-2"></i>Integrasi Google Sheets
+                </h4>
+                <p class="text-sm text-gray-600 mb-4">Hubungkan dengan Google Sheets untuk backup otomatis ke cloud</p>
                 
-                // Check if eligible for free haircut (every 5th visit)
-                if (customers[existingIndex].visits % 5 === 0) {
-                    alert(`🎉 SELAMAT! ${customers[existingIndex].nama} mendapat POTONGAN GRATIS! (Kunjungan ke-${customers[existingIndex].visits})`);
-                }
-            } else {
-                // Add new customer
-                customers.push(customer);
-            }
-            
-            // Save to localStorage
-            localStorage.setItem('barbershop_customers', JSON.stringify(customers));
-            
-            // Show success modal
-            document.getElementById('successModal').style.display = 'block';
-            
-            // Reset form
-            document.getElementById('customerForm').reset();
-            removeImage();
-            
-            // Update UI
-            updateStatistics();
-            renderTable();
-        }
-
-        function closeModal() {
-            document.getElementById('successModal').style.display = 'none';
-        }
-
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.size > 10 * 1024 * 1024) {
-                    alert('Ukuran file terlalu besar! Maksimal 10MB.');
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('imagePreview').src = e.target.result;
-                    document.getElementById('uploadPlaceholder').classList.add('hidden');
-                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function removeImage() {
-            document.getElementById('foto').value = '';
-            document.getElementById('imagePreview').src = '';
-            document.getElementById('uploadPlaceholder').classList.remove('hidden');
-            document.getElementById('imagePreviewContainer').classList.add('hidden');
-        }
-
-        function updateStatistics() {
-            const totalCustomers = customers.length;
-            let totalVisits = 0;
-            customers.forEach(c => totalVisits += c.visits);
-            const freeHaircuts = Math.floor(totalVisits / 5);
-            
-            animateCounter('totalCustomers', totalCustomers);
-            animateCounter('totalVisits', totalVisits);
-            animateCounter('freeHaircuts', freeHaircuts);
-        }
-
-        function animateCounter(elementId, target) {
-            const element = document.getElementById(elementId);
-            let current = 0;
-            const increment = target / 50;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    element.textContent = target;
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current);
-                }
-            }, 30);
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('customerTableBody');
-            const emptyState = document.getElementById('emptyState');
-            
-            if (customers.length === 0) {
-                tbody.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            }
-            
-            emptyState.classList.add('hidden');
-            
-            tbody.innerHTML = customers.map((customer, index) => {
-                const progress = customer.visits % 5;
-                const isEligibleForFree = progress === 0 && customer.visits > 0;
-                const nextFree = 5 - (customer.visits % 5);
-                
-                return `
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="font-semibold">${index + 1}</td>
-                        <td>
-                            <div class="font-bold text-gray-800">${customer.nama}</div>
-                            <div class="text-xs text-gray-500">Bergabung: ${customer.tanggalDaftar}</div>
-                        </td>
-                        <td>
-                            <a href="https://wa.me/${customer.nohp}" target="_blank" 
-                               class="text-green-600 hover:text-green-800 font-semibold">
-                                <i class="fab fa-whatsapp mr-1"></i>${customer.nohp}
-                            </a>
-                        </td>
-                        <td>
-                            <div class="flex items-center gap-2">
-                                <span class="text-2xl font-black text-gray-800">${customer.visits}x</span>
-                                ${isEligibleForFree ? '<span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">GRATIS!</span>' : ''}
-                            </div>
-                            <div class="mt-2 flex gap-1">
-                                ${Array(5).fill(0).map((_, i) => `
-                                    <div class="w-6 h-6 rounded-full ${i < progress ? 'bg-yellow-400' : 'bg-gray-200'} 
-                                         flex items-center justify-center text-xs font-bold ${i < progress ? 'text-gray-900' : 'text-gray-400'}">
-                                        ${i + 1}
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <div class="text-xs text-gray-500 mt-1">
-                                ${isEligibleForFree ? '🎉 Berhak Gratis!' : `Lagi ${nextFree}x lagi gratis`}
-                            </div>
-                        </td>
-                        <td>
-                            ${isEligibleForFree ? 
-                                '<span class="px-4 py-2 bg-red-100 text-red-700 rounded-full font-bold text-sm"><i class="fas fa-crown mr-1"></i>GRATIS</span>' :
-                                '<span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full font-bold text-sm"><i class="fas fa-clock mr-1"></i>Aktif</span>'
-                            }
-                        </td>
-                        <td>
-                            ${customer.foto ? 
-                                `<img src="${customer.foto}" alt="Foto ${customer.nama}" 
-                                  class="w-16 h-16 object-cover rounded-lg cursor-pointer hover:scale-110 transition shadow-md"
-                                  onclick="showImageModal('${customer.foto}')">` :
-                                '<span class="text-gray-400 text-sm"><i class="fas fa-image mr-1"></i>Tidak ada</span>'
-                            }
-                        </td>
-                        <td>
-                            <div class="flex gap-2">
-                                <button onclick="addVisit(${customer.id})" 
-                                        class="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm font-semibold"
-                                        title="Tambah Kunjungan">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <button onclick="deleteCustomer(${customer.id})" 
-                                        class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-semibold"
-                                        title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function addVisit(id) {
-            const index = customers.findIndex(c => c.id === id);
-            if (index !== -1) {
-                customers[index].visits += 1;
-                customers[index].terakhirUpdate = new Date().toISOString();
-                
-                // Check for free haircut eligibility
-                if (customers[index].visits % 5 === 0) {
-                    alert(`🎉 SELAMAT! ${customers[index].nama} sekarang berhak POTONGAN GRATIS!\nTotal kunjungan: ${customers[index].visits}x`);
-                }
-                
-                localStorage.setItem('barbershop_customers', JSON.stringify(customers));
-                updateStatistics();
-                renderTable();
-            }
-        }
-
-        function deleteCustomer(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus customer ini?')) {
-                customers = customers.filter(c => c.id !== id);
-                localStorage.setItem('barbershop_customers', JSON.stringify(customers));
-                updateStatistics();
-                renderTable();
-            }
-        }
-
-        function clearAllData() {
-            if (confirm('⚠️ PERINGATAN: Semua data akan dihapus permanen! Lanjutkan?')) {
-                customers = [];
-                localStorage.removeItem('barbershop_customers');
-                updateStatistics();
-                renderTable();
-                alert('Semua data telah dihapus!');
-            }
-        }
-
-        function exportData() {
-            if (customers.length === 0) {
-                alert('Tidak ada data untuk diekspor!');
-                return;
-            }
-            
-            // Create CSV content
-            let csv = 'No,Nama,No HP,Kunjungan,Tanggal Daftar\n';
-            customers.forEach((c, i) => {
-                csv += `${i+1},"${c.nama}",${c.nohp},${c.visits},"${c.tanggalDaftar}"\n`;
-            });
-            
-            // Download CSV file
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `barbershop_database_${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
-        }
-
-        function showImageModal(imageSrc) {
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.onclick = () => modal.remove();
-            modal.innerHTML = `
-                <div class="modal-content p-6" style="max-width: 600px;">
-                    <img src="${imageSrc}" class="max-w-full max-h-[80vh] rounded-xl mx-auto">
+                <div class="space-y-3">
+                    <input type="text" id="googleSheetUrl" 
+                           class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl"
+                           placeholder="Masukkan Google Apps Script Web App URL...">
+                    <button onclick="saveGoogleSheetConfig()" class="btn-dark w-full py-3 rounded-xl font-bold">
+                        <i class="fas fa-save mr-2"></i>Simpan Konfigurasi
+                    </button>
+                    <button onclick="testGoogleSheetsConnection()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 w-full py-3 rounded-xl font-bold transition">
+                        <i class="fas fa-plug mr-2"></i>Test Koneksi
+                    </button>
                 </div>
-            `;
-            document.body.appendChild(modal);
-            modal.style.display = 'block';
-        }
+                
+                <div id="googleSheetStatus" class="mt-3 text-sm hidden"></div>
+            </div>
 
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('successModal');
-            if (event.target === modal) {
-                closeModal();
-            }
+            <!-- Change Password -->
+            <div class="border-b border-gray-200 pb-6">
+                <h4 class="font-bold text-lg text-gray-800 mb-3">
+                    <i class="fas fa-lock text-yellow-500 mr-2"></i>Ganti Password Admin
+                </h4>
+                <div class="space-y-3">
+                    <input type="password" id="currentPassword" 
+                           class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl"
+                           placeholder="Password lama">
+                    <input type="password" id="newPassword" 
+                           class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl"
+                           placeholder="Password baru">
+                    <button onclick="changeAdminPassword()" class="btn-gold w-full py-3 rounded-xl font-bold">
+                        Update Password
+                    </button>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div>
+                <h4 class="font-bold text-lg text-red-600 mb-3">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Danger Zone
+                </h4>
+                <button onclick="confirmClearAll()" class="bg-red-50 hover:bg-red-100 text-red-600 w-full py-3 rounded-xl font-bold transition border-2 border-red-200">
+                    <i class="fas fa-trash-alt mr-2"></i>Hapus Semua Data
+                </button>
+            </div>
+        </div>
+        
+        <button onclick="closeModal('settingsModal')" class="btn-dark w-full py-4 rounded-xl font-bold mt-6">
+            Tutup Pengaturan
+        </button>
+    </div>
+</div>
+
+<!-- Image Lightbox -->
+<div id="imageLightbox" class="fixed inset-0 z-[100] hidden modal-overlay flex items-center justify-center p-4" onclick="closeModal('imageLightbox')">
+    <img id="lightboxImg" src="" alt="" class="max-w-full max-h-[90vh] rounded-2xl shadow-2xl">
+</div>
+
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+// ==========================================
+// GLOBAL STATE & CONFIGURATION
+// ==========================================
+
+const APP_CONFIG = {
+    defaultUsername: 'admin',
+    defaultPassword: 'barber123',
+    itemsPerPage: 10,
+    currentPage: 1,
+    googleSheetUrl: localStorage.getItem('google_sheet_url') || ''
+};
+
+let customers = [];
+let filteredCustomers = [];
+let lastAddedCustomerId = null;
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', function() {
+    loadCustomers();
+    checkAuthState();
+});
+
+// ==========================================
+// AUTHENTICATION SYSTEM
+// ==========================================
+
+function checkAuthState() {
+    const isLoggedIn = sessionStorage.getItem('barbershop_logged_in');
+    if (isLoggedIn === 'true') {
+        showDashboard();
+    } else {
+        showLoginPage();
+    }
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    // Get stored credentials or use defaults
+    const storedUsername = localStorage.getItem('barbershop_username') || APP_CONFIG.defaultUsername;
+    const storedPassword = localStorage.getItem('barbershop_password') || APP_CONFIG.defaultPassword;
+    
+    if (username === storedUsername && password === storedPassword) {
+        sessionStorage.setItem('barbershop_logged_in', 'true');
+        showDashboard();
+    } else {
+        alert('❌ Username atau password salah!');
+        shakeElement(document.getElementById('loginForm'));
+    }
+}
+
+function handleLogout() {
+    sessionStorage.removeItem('barbershop_logged_in');
+    hideUserMenu();
+    showLoginPage();
+}
+
+function showLoginPage() {
+    document.getElementById('loginPage').classList.remove('hidden');
+    document.getElementById('dashboardPage').classList.add('hidden');
+}
+
+function showDashboard() {
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('dashboardPage').classList.remove('hidden');
+    
+    // Load and render data
+    loadCustomers();
+    updateStatistics();
+    renderTable();
+    
+    // Update nav stats
+    updateNavStats();
+}
+
+function toggleUserMenu() {
+    const menu = document.getElementById('userMenuDropdown');
+    menu.classList.toggle('hidden');
+}
+
+function hideUserMenu() {
+    document.getElementById('userMenuDropdown').classList.add('hidden');
+}
+
+function openSettingsModal() {
+    hideUserMenu();
+    document.getElementById('settingsModal').classList.remove('hidden');
+    
+    // Load current Google Sheet URL
+    document.getElementById('googleSheetUrl').value = APP_CONFIG.googleSheetUrl;
+}
+
+function changeAdminPassword() {
+    const currentPass = document.getElementById('currentPassword').value;
+    const newPass = document.getElementById('newPassword').value;
+    
+    const storedPass = localStorage.getItem('barbershop_password') || APP_CONFIG.defaultPassword;
+    
+    if (currentPass !== storedPass) {
+        alert('❌ Password lama salah!');
+        return;
+    }
+    
+    if (newPass.length < 4) {
+        alert('❌ Password baru minimal 4 karakter!');
+        return;
+    }
+    
+    localStorage.setItem('barbershop_password', newPass);
+    alert('✅ Password berhasil diubah!');
+    document.getElementById('currentPassword').value = '';
+    document.getElementById('newPassword').value = '';
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    const userMenu = document.getElementById('userMenuDropdown');
+    const userBtn = e.target.closest('[onclick="toggleUserMenu()"]');
+    
+    if (!userBtn && !userMenu.contains(e.target)) {
+        userMenu.classList.add('hidden');
+    }
+});
+
+
+// ==========================================
+// DATA MANAGEMENT
+// ==========================================
+
+function loadCustomers() {
+    const stored = localStorage.getItem('barbershop_customers_v2');
+    customers = stored ? JSON.parse(stored) : [];
+    filteredCustomers = [...customers];
+}
+
+function saveCustomers() {
+    localStorage.setItem('barbershop_customers_v2', JSON.stringify(customers));
+}
+
+
+// ==========================================
+// FORM HANDLING
+// ==========================================
+
+function handleSubmitCustomer(e) {
+    e.preventDefault();
+    
+    const nama = document.getElementById('inputNama').value.trim();
+    const nohp = document.getElementById('inputNoHP').value.trim();
+    const fotoInput = document.getElementById('inputFoto');
+    
+    let fotoData = null;
+    if (fotoInput.files && fotoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            fotoData = event.target.result;
+            processAndSaveCustomer(nama, nohp, fotoData);
+        };
+        reader.readAsDataURL(fotoInput.files[0]);
+    } else {
+        processAndSaveCustomer(nama, nohp, null);
+    }
+}
+
+function processAndSaveCustomer(nama, nohp, fotoData) {
+    const existingIndex = customers.findIndex(c => c.nohp === nohp);
+    
+    if (existingIndex !== -1) {
+        // Update existing customer
+        customers[existingIndex].visits += 1;
+        customers[existingIndex].terakhirKunjungan = new Date().toISOString();
+        if (fotoData) {
+            customers[existingIndex].foto = fotoData;
         }
-    </script>
+        
+        const totalVisits = customers[existingIndex].visits;
+        const isEligibleForFree = totalVisits % 5 === 0;
+        
+        lastAddedCustomerId = customers[existingIndex].id;
+        
+        showSuccessModal(
+            `Kunjungan ${nama} berhasil dicatat!`,
+            `Total kunjungan: ${totalVisits}x${isEligibleForFree ? ' 🎉 BERHAK GRATIS!' : ''}`,
+            true
+        );
+        
+        if (isEligibleForFree) {
+            setTimeout(() => {
+                alert(`🎊 SELAMAT!\n\n${nama} telah menyelesaikan ${totalVisits} kunjungan!\n\nMendapatkan 1 POTONGAN GRATIS!`);
+            }, 500);
+        }
+        
+    } else {
+        // Add new customer
+        const newCustomer = {
+            id: Date.now(),
+            nama: nama,
+            nohp: nohp,
+            visits: 1,
+            foto: fotoData,
+            tanggalDaftar: new Date().toLocaleDateString('id-ID'),
+            terakhirKunjungan: new Date().toISOString()
+        };
+        
+        customers.push(newCustomer);
+        lastAddedCustomerId = newCustomer.id;
+        
+        showSuccessModal(
+            `Customer "${nama}" berhasil didaftarkan!`,
+            `Ini adalah kunjungan pertama (1/5)`,
+            true
+        );
+    }
+    
+    // Save and refresh
+    saveCustomers();
+    updateStatistics();
+    updateNavStats();
+    renderTable();
+    
+    // Reset form
+    document.getElementById('customerForm').reset();
+    clearUploadImage();
+    
+    // Auto-sync to Google Sheets if configured
+    if (APP_CONFIG.googleSheetUrl) {
+        setTimeout(() => syncToGoogleSheets(), 1000);
+    }
+}
+
+
+// ==========================================
+// IMAGE UPLOAD HANDLING
+// ==========================================
+
+function previewUploadImage(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    if (file.size > 5 * 1024 * 1024) {
+        alert('❌ Ukuran file terlalu besar! Maksimal 5MB.');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        document.getElementById('uploadPreviewImg').src = ev.target.result;
+        document.getElementById('uploadPlaceholder').classList.add('hidden');
+        document.getElementById('uploadPreviewContainer').classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+function clearUploadImage() {
+    document.getElementById('inputFoto').value = '';
+    document.getElementById('uploadPreviewImg').src = '';
+    document.getElementById('uploadPlaceholder').classList.remove('hidden');
+    document.getElementById('uploadPreviewContainer').classList.add('hidden');
+}
+
+
+// ==========================================
+// TABLE RENDERING WITH PAGINATION
+// ==========================================
+
+function renderTable() {
+    const tbody = document.getElementById('customerTableBody');
+    const emptyState = document.getElementById('emptyState');
+    const paginationContainer = document.getElementById('paginationContainer');
+    const tableWrapper = tbody.closest('.overflow-x-auto');
+    
+    // Apply search/filter
+    applyFilters();
+    
+    if (filteredCustomers.length === 0) {
+        tbody.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        paginationContainer.classList.add('hidden');
+        tableWrapper.classList.add('hidden');
+        document.getElementById('tableCountBadge').textContent = '0 data';
+        return;
+    }
+    
+    emptyState.classList.add('hidden');
+    paginationContainer.classList.remove('hidden');
+    tableWrapper.classList.remove('hidden');
+    document.getElementById('tableCountBadge').textContent = `${filteredCustomers.length} data`;
+    
+    // Calculate pagination
+    const perPage = parseInt(document.getElementById('perPageSelect').value);
+    const totalPages = Math.ceil(filteredCustomers.length / perPage);
+    
+    // Ensure current page is valid
+    if (APP_CONFIG.currentPage > totalPages) APP_CONFIG.currentPage = totalPages;
+    if (APP_CONFIG.currentPage < 1) APP_CONFIG.currentPage = 1;
+    
+    const startIndex = (APP_CONFIG.currentPage - 1) * perPage;
+    const endIndex = Math.min(startIndex + perPage, filteredCustomers.length);
+    const pageData = filteredCustomers.slice(startIndex, endIndex);
+    
+    // Render rows
+    tbody.innerHTML = pageData.map((cust, idx) => {
+        const progress = cust.visits % 5;
+        const isEligibleForFree = progress === 0 && cust.visits > 0;
+        const nextFree = isEligibleForFree ? 0 : (5 - progress);
+        
+        return `
+            <tr class="table-row-hover border-b border-gray-100 transition">
+                <td class="px-4 py-3 font-bold text-gray-500">${startIndex + idx + 1}</td>
+                <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                        ${cust.foto ? 
+                            `<img src="${cust.foto}" class="w-12 h-12 object-cover rounded-lg shadow cursor-pointer hover:scale-110 transition" 
+                                     onclick="showLightbox('${cust.foto}')">` :
+                            `<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-user text-gray-400"></i>
+                             </div>`
+                        }
+                        <div>
+                            <p class="font-bold text-gray-900">${cust.nama}</p>
+                            <p class="text-xs text-gray-500">${cust.tanggalDaftar}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-4 py-3 hidden md:table-cell">
+                    <a href="https://wa.me/${cust.nohp}" target="_blank" 
+                       class="text-green-600 hover:text-green-800 font-semibold text-sm">
+                        <i class="fab fa-whatsapp mr-1"></i>${cust.nohp}
+                    </a>
+                </td>
+                <td class="px-4 py-3 text-center">
+                    <div class="inline-flex flex-col items-center">
+                        <span class="text-2xl font-black ${isEligibleForFree ? 'text-red-500' : 'text-gray-900'}">${cust.visits}x</span>
+                        <div class="flex gap-1 mt-1">
+                            ${Array(5).fill(0).map((_, i) => `
+                                <div class="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center
+                                    ${i < progress ? 'bg-yellow-400 text-gray-900' : 'bg-gray-200 text-gray-500'}">
+                                    ${i + 1}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <span class="text-[10px] ${isEligibleForFree ? 'text-red-500 font-bold' : 'text-gray-500'}">
+                            ${isEligibleForFree ? '🎁 GRATIS!' : `${nextFree}x lagi`}
+                        </span>
+                    </div>
+                </td>
+                <td class="px-4 py-3 text-center">
+                    ${isEligibleForFree ?
+                        `<span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold animate-pulse">
+                            <i class="fas fa-gift mr-1"></i>GRATIS
+                         </span>` :
+                        `<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">
+                            <i class="fas fa-check mr-1"></i>AKTIF
+                         </span>`
+                    }
+                </td>
+                <td class="px-4 py-3 text-center">
+                    <div class="flex items-center justify-center gap-1">
+                        <button onclick="addVisit(${cust.id})" title="Tambah Kunjungan"
+                                class="p-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button onclick="showQRCode(${cust.id})" title="QR Code"
+                                class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition">
+                            <i class="fas fa-qrcode"></i>
+                        </button>
+                        <button onclick="printStruk(${cust.id})" title="Cetak Struk"
+                                class="p-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition">
+                            <i class="fas fa-print"></i>
+                        </button>
+                        <button onclick="deleteCustomer(${cust.id})" title="Hapus"
+                                class="p-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+    
+    // Update pagination info
+    document.getElementById('showingFrom').textContent = filteredCustomers.length > 0 ? startIndex + 1 : 0;
+    document.getElementById('showingTo').textContent = endIndex;
+    document.getElementById('totalItems').textContent = filteredCustomers.length;
+    
+    // Render page buttons
+    renderPaginationButtons(totalPages);
+    
+    // Update button states
+    document.getElementById('btnFirst').disabled = APP_CONFIG.currentPage === 1;
+    document.getElementById('btnPrev').disabled = APP_CONFIG.currentPage === 1;
+    document.getElementById('btnNext').disabled = APP_CONFIG.currentPage === totalPages;
+    document.getElementById('btnLast').disabled = APP_CONFIG.currentPage === totalPages;
+}
+
+function renderPaginationButtons(totalPages) {
+    const container = document.getElementById('pageNumbers');
+    container.innerHTML = '';
+    
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, APP_CONFIG.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.className = `page-btn w-10 h-10 border-2 rounded-lg font-bold ${i === APP_CONFIG.currentPage ? 'active' : 'border-gray-200 hover:border-yellow-500'}`;
+        btn.onclick = () => goToPage(i);
+        container.appendChild(btn);
+    }
+}
+
+function goToPage(page) {
+    const perPage = parseInt(document.getElementById('perPageSelect').value);
+    const totalPages = Math.ceil(filteredCustomers.length / perPage);
+    
+    if (typeof page === 'string') {
+        switch(page) {
+            case 'first': APP_CONFIG.currentPage = 1; break;
+            case 'prev': APP_CONFIG.currentPage = Math.max(1, APP_CONFIG.currentPage - 1); break;
+            case 'next': APP_CONFIG.currentPage = Math.min(totalPages, APP_CONFIG.currentPage + 1); break;
+            case 'last': APP_CONFIG.currentPage = totalPages; break;
+        }
+    } else {
+        APP_CONFIG.currentPage = page;
+    }
+    
+    renderTable();
+}
+
+function changePerPage() {
+    APP_CONFIG.currentPage = 1;
+    renderTable();
+}
+
+
+// ==========================================
+// SEARCH & FILTER
+// ==========================================
+
+function applyFilters() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const statusFilter = document.getElementById('filterStatus').value;
+    
+    filteredCustomers = customers.filter(cust => {
+        const matchSearch = cust.nama.toLowerCase().includes(searchTerm) || 
+                          cust.nohp.includes(searchTerm);
+        
+        const progress = cust.visits % 5;
+        const isEligibleForFree = progress === 0 && cust.visits > 0;
+        
+        let matchStatus = true;
+        if (statusFilter === 'active') matchStatus = !isEligibleForFree;
+        if (statusFilter === 'free') matchStatus = isEligibleForFree;
+        
+        return matchSearch && matchStatus;
+    });
+}
+
+function handleSearch() {
+    APP_CONFIG.currentPage = 1;
+    renderTable();
+}
+
+
+// ==========================================
+// CUSTOMER ACTIONS
+// ==========================================
+
+function addVisit(id) {
+    const index = customers.findIndex(c => c.id === id);
+    if (index === -1) return;
+    
+    customers[index].visits += 1;
+    customers[index].terakhirKunjungan = new Date().toISOString();
+    
+    const cust = customers[index];
+    const isEligibleForFree = cust.visits % 5 === 0;
+    
+    saveCustomers();
+    updateStatistics();
+    updateNavStats();
+    renderTable();
+    
+    if (isEligibleForFree) {
+        alert(`🎉 SELAMAT!\n\n${cust.nama} mendapat POTONGAN GRATIS!\nTotal kunjungan: ${cust.visits}x`);
+        printStruk(cust.id); // Auto print struk when eligible
+    } else {
+        showSuccessModal(
+            `Kunjungan ${cust.nama} ditambahkan!`,
+            `Total: ${cust.visits}x (${5 - (cust.visits % 5)}x lagi gratis)`
+        );
+    }
+    
+    // Auto-sync
+    if (APP_CONFIG.googleSheetUrl) {
+        setTimeout(() => syncToGoogleSheets(), 500);
+    }
+}
+
+function deleteCustomer(id) {
+    if (!confirm('⚠️ Yakin ingin menghapus customer ini?')) return;
+    
+    customers = customers.filter(c => c.id !== id);
+    saveCustomers();
+    updateStatistics();
+    updateNavStats();
+    renderTable();
+}
+
+function confirmClearAll() {
+    if (!confirm('⚠️ PERINGATAN!\n\nSemua data akan DIHAPUS PERMANEN!\n\nLanjutkan?')) return;
+    if (!confirm('🔴 Konfirmasi sekali lagi:\n\nTindakan ini tidak dapat dibatalkan!')) return;
+    
+    customers = [];
+    saveCustomers();
+    updateStatistics();
+    updateNavStats();
+    renderTable();
+    
+    alert('✅ Semua data berhasil dihapus!');
+}
+
+
+// ==========================================
+// STATISTICS
+// ==========================================
+
+function updateStatistics() {
+    const totalCust = customers.length;
+    let totalVisits = 0;
+    let pendingRewards = 0;
+    
+    customers.forEach(c => {
+        totalVisits += c.visits;
+        const progress = c.visits % 5;
+        if (progress >= 3 && progress < 5) pendingRewards++; // Mendekat gratis
+    });
+    
+    const freeHaircuts = Math.floor(totalVisits / 5);
+    
+    animateNumber('statTotalCustomers', totalCust);
+    animateNumber('statTotalVisits', totalVisits);
+    animateNumber('statFreeHaircuts', freeHaircuts);
+    animateNumber('statPendingRewards', pendingRewards);
+}
+
+function updateNavStats() {
+    const totalCust = customers.length;
+    let totalVisits = 0;
+    customers.forEach(c => totalVisits += c.visits);
+    
+    document.getElementById('navTotalCust').textContent = totalCust;
+    document.getElementById('navTotalVisits').textContent = totalVisits;
+}
+
+function animateNumber(elementId, target) {
+    const el = document.getElementById(elementId);
+    const start = parseInt(el.textContent) || 0;
+    const duration = 500;
+    const startTime = performance.now();
+    
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const current = Math.floor(start + (target - start) * progress);
+        el.textContent = current;
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    
+    requestAnimationFrame(update);
+}
+
+
+// ==========================================
+// QR CODE GENERATION
+// ==========================================
+
+let currentQRCodeInstance = null;
+
+function showQRCode(customerId) {
+    const cust = customers.find(c => c.id === customerId);
+    if (!cust) return;
+    
+    document.getElementById('qrCustomerName').textContent = cust.nama;
+    document.getElementById('qrModal').classList.remove('hidden');
+    
+    // Clear previous QR code
+    const container = document.getElementById('qrCodeContainer');
+    container.innerHTML = '';
+    
+    // Generate QR code with customer data
+    const qrData = JSON.stringify({
+        id: cust.id,
+        nama: cust.nama,
+        nohp: cust.nohp,
+        visits: cust.visits,
+        source: 'Barbershop Premium'
+    }, null, 2);
+    
+    currentQRCodeInstance = new QRCode(container, {
+        text: qrData,
+        width: 200,
+        height: 200,
+        colorDark: '#1a1a1a',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+    });
+}
+
+function downloadQRCode() {
+    const canvas = document.querySelector('#qrCodeCanvas');
+    if (!canvas) return;
+    
+    const link = document.createElement('a');
+    link.download = 'qrcode-barbershop.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+
+
+// ==========================================
+// STRUK / RECEIPT PRINTING
+// ==========================================
+
+function printStruk(customerId) {
+    const cust = customers.find(c => c.id === customerId);
+    if (!cust) return;
+    
+    const progress = cust.visits % 5;
+    const isEligibleForFree = progress === 0 && cust.visits > 0;
+    const dateNow = new Date().toLocaleString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    const strukHTML = `
+        <div style="text-align:center; margin-bottom:15px;">
+            <div style="font-size:24px; font-weight:bold;">✂️ BARBERSHOP PREMIUM</div>
+            <div style="font-size:11px; color:#666;">Jl. Contoh Alamat No. 123</div>
+            <div style="font-size:11px; color:#666;">Tel: 08123456789</div>
+        </div>
+        
+        <div style="border-top:2px dashed #000; border-bottom:2px dashed #000; padding:12px 0; margin:10px 0;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                <span style="font-weight:bold;">BUKTI KUNJUNGAN</span>
+                <span>#${String(cust.id).slice(-6)}</span>
+            </div>
+            <div style="margin:8px 0;">
+                <div style="font-weight:bold; font-size:16px;">${cust.nama.toUpperCase()}</div>
+                <div style="font-size:11px; color:#666;">${cust.nohp}</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:12px;">
+                <span>Tanggal</span>
+                <span>${dateNow}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:bold;">
+                <span>Kunjungan Ke-</span>
+                <span>${cust.visits}</span>
+            </div>
+        </div>
+        
+        <div style="background:${isEligibleForFree ? '#fee2e2' : '#f0fdf4'}; padding:10px; border-radius:8px; text-align:center; margin:10px 0;">
+            ${isEligibleForFree ? 
+                '<div style="color:#dc2626; font-weight:bold; font-size:14px;">🎁 SELAMAT!</div><div style="color:#dc2626; font-size:12px;">Anda mendapat 1 POTONGAN GRATIS!</div>' :
+                `<div style="color:#16a34a; font-weight:bold; font-size:13px;">Progress: ${progress}/5 ✂️</div><div style="color:#666; font-size:11px;">Lagi ${5-progress}x kunjungan lagi untuk GRATIS!</div>`
+            }
+        </div>
+        
+        <div style="margin-top:15px; text-align:center;">
+            <div style="font-size:18px; letter-spacing:3px;">▪▪▪▪▪▪▪▪▪▪</div>
+            <div style="font-size:10px; color:#999; margin-top:5px;">Terima kasih atas kunjungannya!</div>
+            <div style="font-size:10px; color:#999;">Program: Cukur 5x Gratis 1x</div>
+        </div>
+    `;
+    
+    document.getElementById('printArea').innerHTML = strukHTML;
+    document.getElementById('strukModal').classList.remove('hidden');
+}
+
+function printLastStruc() {
+    if (lastAddedCustomerId) {
+        printStruk(lastAddedCustomerId);
+    }
+}
+
+function executePrint() {
+    window.print();
+}
+
+function printAllData() {
+    if (customers.length === 0) {
+        alert('❌ Tidak ada data untuk dicetak!');
+        return;
+    }
+    
+    let tableHTML = `
+        <style>
+            body { font-family: Arial, sans-serif; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background: #f4f4f4; }
+        </style>
+        <h2>Data Customer Barbershop - ${new Date().toLocaleDateString('id-ID')}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th><th>Nama</th><th>No HP</th><th>Kunjungan</th><th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    customers.forEach((c, i) => {
+        const progress = c.visits % 5;
+        const isFree = progress === 0 && c.visits > 0;
+        tableHTML += `
+            <tr>
+                <td>${i+1}</td>
+                <td>${c.nama}</td>
+                <td>${c.nohp}</td>
+                <td>${c.visits}x</td>
+                <td>${isFree ? 'GRATIS' : 'Aktif'}</td>
+            </tr>
+        `;
+    });
+    
+    tableHTML += '</tbody></table>';
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(tableHTML);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+
+// ==========================================
+// EXPORT FUNCTIONS
+// ==========================================
+
+function exportToCSV() {
+    if (customers.length === 0) {
+        alert('❌ Tidak ada data untuk diekspor!');
+        return;
+    }
+    
+    let csv = 'ID,Nama,No HP,Kunjungan,Tanggal Daftar,Terakhir Kunjungan,Status\n';
+    
+    customers.forEach(c => {
+        const progress = c.visits % 5;
+        const status = (progress === 0 && c.visits > 0) ? 'GRATIS' : 'Aktif';
+        csv += `"${c.id}","${c.nama}","${c.nohp}",${c.visits},"${c.tanggalDaftar}","${c.terakhirKunjungan}","${status}"\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `barbershop_customers_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+}
+
+
+// ==========================================
+// GOOGLE SHEETS INTEGRATION
+// ==========================================
+
+function saveGoogleSheetConfig() {
+    const url = document.getElementById('googleSheetUrl').value.trim();
+    
+    if (!url) {
+        alert('❌ Masukkan URL Google Apps Script Web App!');
+        return;
+    }
+    
+    APP_CONFIG.googleSheetUrl = url;
+    localStorage.setItem('google_sheet_url', url);
+    
+    document.getElementById('googleSheetStatus').className = 'mt-3 text-sm text-green-600';
+    document.getElementById('googleSheetStatus').textContent = '✅ Konfigurasi tersimpan!';
+    document.getElementById('googleSheetStatus').classList.remove('hidden');
+    
+    alert('✅ URL Google Sheet berhasil disimpan!');
+}
+
+async function testGoogleSheetsConnection() {
+    if (!APP_CONFIG.googleSheetUrl) {
+        alert('❌ Simpan URL terlebih dahulu!');
+        return;
+    }
+    
+    const statusEl = document.getElementById('googleSheetStatus');
+    statusEl.className = 'mt-3 text-sm text-blue-600';
+    statusEl.textContent = '⏳ Menguji koneksi...';
+    statusEl.classList.remove('hidden');
+    
+    try {
+        const response = await fetch(APP_CONFIG.googleSheetUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'test' })
+        });
+        
+        statusEl.className = 'mt-3 text-sm text-green-600';
+        statusEl.textContent = '✅ Koneksi berhasil! (Mode no-cors)';
+    } catch (error) {
+        statusEl.className = 'mt-3 text-sm text-orange-600';
+        statusEl.textContent = '⚠️ Koneksi terkirim (verifikasi di Google Sheet)';
+    }
+}
+
+async function syncToGoogleSheets() {
+    if (!APP_CONFIG.googleSheetUrl) {
+        alert('⚠️ Belum mengkonfigurasi Google Sheet!\n\nBuka Pengaturan → masukkan URL Google Apps Script');
+        return;
+    }
+    
+    if (customers.length === 0) {
+        alert('❌ Tidak ada data untuk di-sync!');
+        return;
+    }
+    
+    const syncBtn = event?.target;
+    if (syncBtn) {
+        syncBtn.disabled = true;
+        syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Syncing...';
+    }
+    
+    try {
+        const payload = {
+            action: 'sync',
+            data: customers.map(c => ({
+                id: c.id,
+                nama: c.nama,
+                nohp: c.nohp,
+                visits: c.visits,
+                tanggalDaftar: c.tanggalDaftar,
+                terakhirKunjungan: c.terakhirKunjungan,
+                status: (c.visits % 5 === 0 && c.visits > 0) ? 'GRATIS' : 'Aktif'
+            }))
+        };
+        
+        await fetch(APP_CONFIG.googleSheetUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        
+        // Show success feedback
+        const syncStatus = document.getElementById('syncStatus');
+        syncStatus.classList.remove('hidden');
+        
+        alert(`✅ Berhasil sync ${customers.length} customer ke Google Sheet!`);
+        
+    } catch (error) {
+        console.error('Sync error:', error);
+        alert('⚠️ Sync terkirim. Verifikasi data di Google Sheet Anda.');
+    }
+    
+    if (syncBtn) {
+        syncBtn.disabled = false;
+        syncBtn.innerHTML = '<i class="fab fa-google mr-1"></i>Sync G-Sheet';
+    }
+}
+
+
+// ==========================================
+// UTILITY FUNCTIONS
+// ==========================================
+
+function showModal(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
+function showSuccessModal(message, submessage = '', showPrintBtn = false) {
+    document.getElementById('successMessage').textContent = message;
+    document.getElementById('successSubmessage').textContent = submessage;
+    document.getElementById('btnPrintStruk').classList.toggle('hidden', !showPrintBtn);
+    document.getElementById('successModal').classList.remove('hidden');
+}
+
+function showLightbox(imageSrc) {
+    document.getElementById('lightboxImg').src = imageSrc;
+    document.getElementById('imageLightbox').classList.remove('hidden');
+}
+
+function shakeElement(element) {
+    element.style.animation = 'none';
+    element.offsetHeight; // Trigger reflow
+    element.style.animation = 'shake 0.5s ease-in-out';
+}
+
+// Add shake animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+`;
+document.head.appendChild(style);
+
+// Close modals on outside click
+document.querySelectorAll('.modal-overlay').forEach(modal => {
+    modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.add('hidden');
+        }
+    });
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
+    }
+});
+</script>
+
+<style>
+/* Additional animations */
+@keyframes cut {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+</style>
+
 </body>
 </html>
